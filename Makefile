@@ -31,7 +31,10 @@ clean:  ## Clean up generated files
 	find . -type d -name "__pycache__" -delete
 
 run-basic:  ## Run basic sine function test
-	uv run python src/experiments/basic_test.py
+	uv run python src/experiments/test_sine_problem.py
+
+run-task1:  ## Run Task 1 algorithms test
+	uv run python src/experiments/test_task1_algorithms.py
 
 run-all:  ## Run all experiments
 	uv run python src/experiments/run_all.py

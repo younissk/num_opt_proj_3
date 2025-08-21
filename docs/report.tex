@@ -58,4 +58,122 @@ num_opt_proj_3/
 
 \section{Core Implementation}
 
+\subsection{Problem Formulation}
+
+The core problem formulation has been implemented in the \texttt{SineApproximationProblem} class. This class encapsulates:
+
+\begin{itemize}
+    \item \textbf{Vandermonde Matrix Construction}: Creates matrix $A$ where $A[j,i] = a_j^i$ for sample points $a_j$ and powers $i = 0, 1, \ldots, n$
+    \item \textbf{Objective Function}: Implements $f(x) = \frac{1}{2}\|Ax - b\|_2^2$ with gradient $\nabla f(x) = A^\top(Ax - b)$ and Hessian $\nabla^2 f(x) = A^\top A$
+    \item \textbf{Problem Properties}: Computes Lipschitz constant $L = \|A^\top A\|_2$ and condition number for analysis
+    \item \textbf{Visualization}: Methods to plot the sine function approximation and compare with true values
+\end{itemize}
+
+\subsection{Implementation Details}
+
+The problem setup follows the mathematical formulation exactly:
+\begin{itemize}
+    \item Sample points: $a_j \in [-2\pi, 2\pi]$ uniformly spaced
+    \item Target values: $b_j = \sin(a_j)$
+    \item Polynomial basis: $\phi(x;t) = \sum_{i=0}^n x_i t^i$
+    \item Matrix dimensions: $A \in \mathbb{R}^{m \times (n+1)}$ where $m = 100$ samples and $n$ is the polynomial degree
+\end{itemize}
+
+\subsection{Testing and Validation}
+
+A comprehensive test script has been created that:
+\begin{itemize}
+    \item Verifies matrix construction and basic computations
+    \item Tests the least squares solution (without regularization)
+    \item Demonstrates how different polynomial degrees affect approximation quality
+    \item Provides visual feedback through plotting functions
+\end{itemize}
+
+\section{Task 1: Implementation of FB and PG Algorithms}
+
+\subsection{Forward-Backward Algorithm for Penalized Lasso}
+
+The Forward-Backward algorithm has been implemented to solve:
+\begin{equation}
+    \min_{x \in \mathbb{R}^{n+1}} \; \tfrac{1}{2}\|Ax - b\|_2^2 + \lambda \|x\|_1
+\end{equation}
+
+\subsubsection{Algorithm Description}
+
+The algorithm alternates between:
+\begin{enumerate}
+    \item \textbf{Forward step}: Gradient descent on the smooth part
+        \[ x_{temp} = x^k - \frac{1}{L}\nabla f(x^k) \]
+    \item \textbf{Backward step}: Proximal operator for the L1 penalty
+        \[ x^{k+1} = \text{prox}_{\lambda\|\cdot\|_1}(x_{temp}) \]
+\end{enumerate}
+
+where $L = \|A^\top A\|_2$ is the Lipschitz constant of $\nabla f$.
+
+\subsubsection{Optimality Conditions}
+
+The optimality condition for the penalized Lasso is:
+\[ 0 \in \nabla f(x^*) + \partial g(x^*) \]
+where $g(x) = \lambda\|x\|_1$. This means:
+\[ -\nabla f(x^*) \in \partial g(x^*) \]
+
+The proximal residual measures optimality:
+\[ \|x - \text{prox}_{\lambda\|\cdot\|_1}(x - \frac{1}{L}\nabla f(x))\| \]
+
+\subsubsection{Implementation Details}
+
+\begin{itemize}
+    \item Step size: Fixed at $1/L$ for guaranteed convergence
+    \item Stopping criterion: Proximal residual $< \epsilon$ or max iterations
+    \item L1 proximal operator: Soft-thresholding $\text{sign}(x) \odot \max(|x| - \lambda, 0)$
+\end{itemize}
+
+\subsection{Projected Gradient Algorithm for Constrained Lasso}
+
+The Projected Gradient algorithm has been implemented to solve:
+\begin{equation}
+    \min_{x \in \mathbb{R}^{n+1}} \; \tfrac{1}{2}\|Ax - b\|_2^2 \quad \text{subject to} \quad \|x\|_1 \leq 1
+\end{equation}
+
+\subsubsection{Algorithm Description}
+
+The algorithm alternates between:
+\begin{enumerate}
+    \item \textbf{Gradient step}: $x_{temp} = x^k - \frac{1}{L}\nabla f(x^k)$
+    \item \textbf{Projection step}: $x^{k+1} = P_{\|\cdot\|_1 \leq 1}(x_{temp})$
+\end{enumerate}
+
+\subsubsection{Optimality Conditions}
+
+The optimality condition for the constrained problem is:
+\[ \nabla f(x^*) \in N_C(x^*) \]
+where $N_C(x^*)$ is the normal cone to the constraint set at $x^*$.
+
+For the L1-ball constraint $\|x\|_1 \leq 1$:
+\begin{itemize}
+    \item If $\|x\|_1 < 1$ (interior): $N_C(x) = \{0\}$, so $\nabla f(x^*) = 0$
+    \item If $\|x\|_1 = 1$ (boundary): $N_C(x) = \{\lambda \cdot \text{sign}(x_i) : \lambda \geq 0\}$
+\end{itemize}
+
+The projected gradient residual measures optimality:
+\[ \|x - P_{\|\cdot\|_1 \leq 1}(x - \frac{1}{L}\nabla f(x))\| \]
+
+\subsubsection{Implementation Details}
+
+\begin{itemize}
+    \item Step size: Fixed at $1/L$ for guaranteed convergence
+    \item Stopping criterion: Projected gradient residual $< \epsilon$ or max iterations
+    \item L1-ball projection: Efficient algorithm using sorting and soft-thresholding
+\end{itemize}
+
+\subsection{Results and Validation}
+
+Both algorithms have been successfully implemented and tested:
+\begin{itemize}
+    \item \textbf{Convergence}: Both algorithms converge to solutions satisfying their respective optimality conditions
+    \item \textbf{Regularization effect}: Higher $\lambda$ values in FB lead to sparser solutions
+    \item \textbf{Constraint satisfaction}: PG maintains $\|x\|_1 \leq 1$ throughout iterations
+    \item \textbf{Performance}: Algorithms use fixed step size $1/L$ for optimal convergence rate
+\end{itemize}
+
 \end{document}
