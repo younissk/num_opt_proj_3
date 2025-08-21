@@ -39,6 +39,12 @@ run-task1:  ## Run Task 1 algorithms test
 run-task2:  ## Run Task 2 comprehensive experiments
 	uv run python src/experiments/test_task2_experiments.py
 
+run-task3:  ## Run Task 3 pre-conditioning analysis
+	uv run python src/experiments/task3_preconditioning.py
+
+run-task4:  ## Run Task 4 pre-conditioned runs and comparisons
+	uv run python src/experiments/task4_preconditioned_runs.py
+
 generate-images:  ## Generate all images and save data for Tasks 1 & 2
 	uv run python src/experiments/generate_all_images.py
 

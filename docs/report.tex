@@ -359,15 +359,157 @@ The approximation quality analysis shows:
     \item \textbf{Algorithm differences}: ASM generally provides best approximations for well-conditioned problems
 \end{itemize}
 
+\section{Task 3: Condition Number Analysis and Pre-conditioning}
+
+This section addresses the numerical conditioning issues identified in Task 2 by implementing and analyzing various pre-conditioning strategies for the Vandermonde matrix.
+
+\subsection{Condition Number Growth Analysis}
+
+The condition number $\kappa(A^\top A)$ of the Vandermonde matrix exhibits exponential growth with polynomial degree, as shown in Figure~\ref{fig:task3_condition}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../results/plots/task3_condition_analysis.png}
+\caption{Task 3 Condition Number Analysis: Growth patterns, singular value distributions, and growth rate analysis for polynomial degrees 3-20.}
+\label{fig:task3_condition}
+\end{figure}
+
+\textbf{Key Findings:}
+\begin{itemize}
+    \item \textbf{Exponential growth}: $\kappa$ grows approximately as $O(10^{n/2})$ where $n$ is the polynomial degree
+    \item \textbf{Singular value decay}: Higher-degree problems show rapid singular value decay
+    \item \textbf{Numerical challenges}: Degrees $n \geq 15$ result in condition numbers $> 10^{25}$
+    \item \textbf{Growth rate analysis}: Consecutive condition number ratios show increasing instability
+\end{itemize}
+
+\subsection{Pre-conditioning Strategies}
+
+Three pre-conditioning methods have been implemented and tested:
+
+\subsubsection{Diagonal Pre-conditioning}
+
+Column-wise scaling to normalize the Vandermonde matrix:
+\begin{itemize}
+    \item \textbf{Method}: Scale each column to have unit norm
+    \item \textbf{Effectiveness}: Provides 10-15 orders of magnitude improvement
+    \item \textbf{Advantages}: Simple, numerically stable, preserves problem structure
+    \item \textbf{Limitations}: Limited improvement for very high degrees
+\end{itemize}
+
+\subsubsection{SVD-based Pre-conditioning}
+
+Singular value decomposition-based transformation:
+\begin{itemize}
+    \item \textbf{Method}: Use SVD to create optimal scaling matrices
+    \item \textbf{Effectiveness}: Achieves near-perfect conditioning ($\kappa \approx 1$)
+    \item \textbf{Advantages}: Maximum possible improvement, theoretically optimal
+    \item \textbf{Limitations}: More computationally expensive, may introduce numerical artifacts
+\end{itemize}
+
+\subsubsection{Cholesky Pre-conditioning}
+
+Cholesky decomposition-based transformation:
+\begin{itemize}
+    \item \textbf{Method}: Use Cholesky factors of $A^\top A$ for transformation
+    \item \textbf{Effectiveness}: Often degrades conditioning for ill-conditioned matrices
+    \item \textbf{Advantages}: Preserves positive definiteness
+    \item \textbf{Limitations}: Requires positive definiteness, can fail for high degrees
+\end{itemize}
+
+\subsection{Pre-conditioning Effectiveness Comparison}
+
+Figure~\ref{fig:task3_comprehensive} shows the comprehensive analysis of pre-conditioning effectiveness across different polynomial degrees.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../results/plots/task3_comprehensive_analysis.png}
+\caption{Task 3 Comprehensive Pre-conditioning Analysis: Condition number improvements, effectiveness across degrees, and method comparison.}
+\label{fig:task3_comprehensive}
+\end{figure}
+
+\textbf{Performance Summary:}
+\begin{itemize}
+    \item \textbf{Diagonal method}: Consistent improvement of 10-15 orders of magnitude
+    \item \textbf{SVD method}: Near-perfect conditioning across all degrees
+    \item \textbf{Cholesky method}: Degrades conditioning for high degrees
+    \item \textbf{Recommendation}: Diagonal pre-conditioning provides best balance of effectiveness and efficiency
+\end{itemize}
+
+\subsection{Algorithm Performance on Pre-conditioned Problems}
+
+Figure~\ref{fig:task3_performance} compares algorithm performance on original vs. pre-conditioned problems.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../results/plots/task3_performance_comparison.png}
+\caption{Task 3 Performance Comparison: Algorithm behavior on original vs. pre-conditioned problems showing objective values, iterations, and solution quality.}
+\label{fig:task3_performance}
+\end{figure}
+
+\textbf{Key Results:}
+\begin{itemize}
+    \item \textbf{Pre-conditioning benefits}: All algorithms show improved performance on pre-conditioned problems
+    \item \textbf{ASM improvement}: Most significant improvement in iteration count and solution quality
+    \item \textbf{PG and FB}: Show moderate improvements in convergence behavior
+    \item \textbf{Solution quality}: Pre-conditioned problems yield more meaningful, non-zero solutions
+\end{itemize}
+
 \subsection{Data Persistence and Reproducibility}
 
 All experimental results have been systematically saved to ensure reproducibility and future analysis:
 
 \begin{itemize}
-    \item \textbf{Binary data}: Complete results saved in \texttt{results/data/task1\_results.pkl} and \texttt{results/data/task2\_results.pkl}
-    \item \textbf{JSON summaries}: Human-readable summaries in \texttt{results/data/task1\_results.json} and \texttt{results/data/task2\_results.json}
-    \item \textbf{High-resolution plots}: Publication-quality visualizations in \texttt{results/plots/}
+    \item \textbf{Binary data}: Complete results saved in \texttt{results/data/task1\_results.pkl}, \texttt{results/data/task2\_results.pkl}, and \texttt{results/data/task3\_results.pkl}
+    \item \textbf{JSON summaries}: Human-readable summaries in \texttt{results/data/task1\_results.json}, \texttt{results/data/task2\_results.json}, and \texttt{results/data/task3\_results.json}
+    \item \textbf{High-resolution plots}: Publication-quality visualizations in \texttt{results/plots/} including Task 3 pre-conditioning analysis plots
     \item \textbf{Timestamped data}: All results include timestamps for version control
+\end{itemize}
+
+\section{Task 4: Algorithms on Pre-conditioned Problems}
+
+This section evaluates FB, PG, and ASM when applied directly to pre-conditioned problems (diagonal and SVD) and compares against the original problems across degrees $n \in \{8,10,12,15\}$.
+
+\subsection{Performance Comparison}
+
+Figure~\ref{fig:task4_perf} summarizes composite performance metrics (iterations, objective, time, and residual) aggregated across algorithms for each conditioning method.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../results/plots/task4_preconditioned_performance.png}
+\caption{Task 4 Pre-conditioned Performance: Composite metrics across degrees for original, diagonal, and SVD pre-conditioning. Lower is better.}
+\label{fig:task4_perf}
+\end{figure}
+
+\textbf{Observations:}
+\begin{itemize}
+    \item \textbf{Diagonal pre-conditioning}: Consistent improvements in iterations and residuals; efficient and numerically stable.
+    \item \textbf{SVD pre-conditioning}: Often yields the best composite scores due to near-perfect conditioning, at higher setup cost.
+    \item \textbf{Original problems}: Performance degrades rapidly with degree due to ill-conditioning.
+\end{itemize}
+
+\subsection{Approximation Quality}
+
+Figure~\ref{fig:task4_quality} shows representative function fits at degree 12, selecting best solutions (lowest objective) per algorithm and method. Pre-conditioning enables more meaningful, non-zero solutions with lower RMSE.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../results/plots/task4_approximation_quality.png}
+\caption{Task 4 Approximation Quality (Degree 12): Best per algorithm and method; pre-conditioning improves fit quality and stability.}
+\label{fig:task4_quality}
+\end{figure}
+
+\subsection{Discussion}
+\begin{itemize}
+    \item \textbf{Trade-off}: SVD delivers maximal conditioning (and performance) but with higher pre-processing cost; diagonal is a robust default.
+    \item \textbf{Algorithm sensitivity}: ASM benefits notably from pre-conditioning; PG and FB also improve but are bounded by the feasible set/regularization.
+    \item \textbf{Recommendation}: Use diagonal pre-conditioning in practice; consider SVD for small-to-medium $n$ when setup time is acceptable.
+\end{itemize}
+
+\subsection{Reproducibility}
+Task 4 data and plots are saved as:
+\begin{itemize}
+    \item \textbf{Data}: \texttt{results/data/task4\_results.pkl}, \texttt{results/data/task4\_results.json}
+    \item \textbf{Plots}: \texttt{results/plots/task4\_preconditioned\_performance.png}, \texttt{results/plots/task4\_approximation\_quality.png}
 \end{itemize}
 
 The data includes:

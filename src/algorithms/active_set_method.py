@@ -13,7 +13,7 @@ using active-set methods.
 
 import numpy as np
 from typing import Dict, Any, Optional
-from problems.sine_approximation import SineApproximationProblem
+from problems.base_problem import BaseOptimizationProblem
 import scipy.optimize
 
 
@@ -30,7 +30,7 @@ class ActiveSetMethod:
     and solves the resulting equality-constrained QP subproblems.
     """
 
-    def __init__(self, problem: SineApproximationProblem):
+    def __init__(self, problem: BaseOptimizationProblem):
         """
         Initialize the Active-Set Method.
 

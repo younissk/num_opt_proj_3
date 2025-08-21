@@ -11,7 +11,7 @@ The algorithm alternates between:
 
 import numpy as np
 from typing import Dict, Any, Optional
-from problems.sine_approximation import SineApproximationProblem
+from problems.base_problem import BaseOptimizationProblem
 
 
 class ProjectedGradient:
@@ -27,7 +27,7 @@ class ProjectedGradient:
         - L is the Lipschitz constant of ∇f
     """
     
-    def __init__(self, problem: SineApproximationProblem):
+    def __init__(self, problem: BaseOptimizationProblem):
         """
         Initialize the Projected Gradient algorithm.
         

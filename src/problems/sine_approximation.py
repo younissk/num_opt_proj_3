@@ -7,9 +7,10 @@ over [-2π, 2π] using a polynomial of degree n with Lasso regularization.
 
 import numpy as np
 import matplotlib.pyplot as plt
+from .base_problem import BaseOptimizationProblem
 
 
-class SineApproximationProblem:
+class SineApproximationProblem(BaseOptimizationProblem):
     """
     Problem formulation for approximating sin(t) using polynomial regression.
 
@@ -27,23 +28,53 @@ class SineApproximationProblem:
             degree: Degree of the polynomial (n)
             num_samples: Number of sample points (m)
         """
-        self.degree = degree
-        self.num_samples = num_samples
+        self._degree = degree
+        self._num_samples = num_samples
 
         # Generate sample points uniformly spaced over [-2π, 2π]
         self.sample_points = np.linspace(-2*np.pi, 2*np.pi, num_samples)
 
         # Target values: b_j = sin(a_j)
-        self.target_values = np.sin(self.sample_points)
+        self._target_values = np.sin(self.sample_points)
 
         # Construct Vandermonde matrix A
-        self.vandermonde_matrix = self._construct_vandermonde_matrix()
+        self._vandermonde_matrix = self._construct_vandermonde_matrix()
 
         # Compute Lipschitz constant L = ||A^T A||_2
-        self.lipschitz_constant = self._compute_lipschitz_constant()
+        self._lipschitz_constant = self._compute_lipschitz_constant()
 
         # Condition number of A^T A
-        self.condition_number = self._compute_condition_number()
+        self._condition_number = self._compute_condition_number()
+
+    @property
+    def degree(self) -> int:
+        """Return the polynomial degree."""
+        return self._degree
+    
+    @property
+    def num_samples(self) -> int:
+        """Return the number of sample points."""
+        return self._num_samples
+    
+    @property
+    def lipschitz_constant(self) -> float:
+        """Return the Lipschitz constant of the gradient."""
+        return self._lipschitz_constant
+    
+    @property
+    def condition_number(self) -> float:
+        """Return the condition number of A^T A."""
+        return self._condition_number
+    
+    @property
+    def vandermonde_matrix(self) -> np.ndarray:
+        """Return the Vandermonde matrix."""
+        return self._vandermonde_matrix
+    
+    @property
+    def target_values(self) -> np.ndarray:
+        """Return the target values."""
+        return self._target_values
 
     def _construct_vandermonde_matrix(self) -> np.ndarray:
         """
@@ -69,7 +100,7 @@ class SineApproximationProblem:
         Returns:
             Largest singular value of A^T A
         """
-        ATA = self.vandermonde_matrix.T @ self.vandermonde_matrix
+        ATA = self._vandermonde_matrix.T @ self._vandermonde_matrix
         singular_values = np.linalg.svd(ATA, compute_uv=False)
         return singular_values[0]  # Largest singular value
 
@@ -80,7 +111,7 @@ class SineApproximationProblem:
         Returns:
             Ratio of largest to smallest singular value
         """
-        ATA = self.vandermonde_matrix.T @ self.vandermonde_matrix
+        ATA = self._vandermonde_matrix.T @ self._vandermonde_matrix
         singular_values = np.linalg.svd(ATA, compute_uv=False)
         return singular_values[0] / singular_values[-1]
 
@@ -94,7 +125,7 @@ class SineApproximationProblem:
         Returns:
             Objective function value
         """
-        residual = self.vandermonde_matrix @ x - self.target_values
+        residual = self._vandermonde_matrix @ x - self._target_values
         return 0.5 * np.sum(residual ** 2)
 
     def gradient(self, x: np.ndarray) -> np.ndarray:
@@ -107,8 +138,8 @@ class SineApproximationProblem:
         Returns:
             Gradient vector of shape (degree + 1,)
         """
-        residual = self.vandermonde_matrix @ x - self.target_values
-        return self.vandermonde_matrix.T @ residual
+        residual = self._vandermonde_matrix @ x - self._target_values
+        return self._vandermonde_matrix.T @ residual
 
     def hessian(self) -> np.ndarray:
         """
@@ -117,7 +148,7 @@ class SineApproximationProblem:
         Returns:
             Hessian matrix of shape (degree + 1, degree + 1)
         """
-        return self.vandermonde_matrix.T @ self.vandermonde_matrix
+        return self._vandermonde_matrix.T @ self._vandermonde_matrix
 
     def evaluate_polynomial(self, x: np.ndarray, t_values: np.ndarray) -> np.ndarray:
         """
