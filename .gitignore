@@ -145,7 +145,6 @@ dmypy.json
 *.jpg
 *.jpeg
 *.gif
-*.pdf
 *.eps
 *.ps
 *.svg
