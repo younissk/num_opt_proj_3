@@ -36,6 +36,12 @@ run-basic:  ## Run basic sine function test
 run-task1:  ## Run Task 1 algorithms test
 	uv run python src/experiments/test_task1_algorithms.py
 
+run-task2:  ## Run Task 2 comprehensive experiments
+	uv run python src/experiments/test_task2_experiments.py
+
+generate-images:  ## Generate all images and save data for Tasks 1 & 2
+	uv run python src/experiments/generate_all_images.py
+
 run-all:  ## Run all experiments
 	uv run python src/experiments/run_all.py
 

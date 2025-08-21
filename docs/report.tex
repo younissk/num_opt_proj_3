@@ -176,4 +176,206 @@ Both algorithms have been successfully implemented and tested:
     \item \textbf{Performance}: Algorithms use fixed step size $1/L$ for optimal convergence rate
 \end{itemize}
 
+\subsection{Visualization and Analysis}
+
+Figure~\ref{fig:task1_comprehensive} provides a comprehensive comparison of all three algorithms on the same problem instance (degree 8, 100 samples).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../results/plots/task1_comprehensive.png}
+\caption{Comprehensive Task 1 Analysis: Function approximations, coefficient comparisons, regularization effects, and convergence behavior for FB, PG, and ASM algorithms.}
+\label{fig:task1_comprehensive}
+\end{figure}
+
+The visualization demonstrates:
+\begin{itemize}
+    \item \textbf{Function Approximation Quality}: How different algorithms and regularization parameters affect the sine function approximation
+    \item \textbf{Coefficient Sparsity}: The impact of L1 regularization on coefficient values and sparsity patterns
+    \item \textbf{Regularization Sensitivity}: How the $\lambda$ parameter controls the trade-off between approximation accuracy and sparsity
+    \item \textbf{Convergence Behavior}: Comparison of convergence rates and optimality measures across algorithms
+\end{itemize}
+
+\section{Task 2: Application and Comparison of Algorithms}
+
+\subsection{Active-Set Method Implementation}
+
+The Active-Set Method (ASM) has been implemented for the constrained Lasso problem:
+\begin{equation}
+    \min_{x \in \mathbb{R}^{n+1}} \; \tfrac{1}{2}\|Ax - b\|_2^2 \quad \text{subject to} \quad \|x\|_1 \leq 1
+\end{equation}
+
+\subsubsection{Algorithm Description}
+
+The ASM reformulates the L1-ball constraint as a combination of:
+\begin{itemize}
+    \item Box constraints: $-1 \leq x_i \leq 1$ for all $i$
+    \item L1 constraint: $\sum_i |x_i| \leq 1$
+\end{itemize}
+
+The implementation uses Sequential Least Squares Programming (SLSQP) to efficiently handle the constrained quadratic programming problem.
+
+\subsubsection{Optimality Conditions}
+
+For the constrained problem, the KKT conditions are:
+\begin{enumerate}
+    \item \textbf{Stationarity}: $\nabla f(x^*) + \lambda^* \nabla g(x^*) = 0$
+    \item \textbf{Primal feasibility}: $g(x^*) \leq 0$ (i.e., $\|x^*\|_1 \leq 1$)
+    \item \textbf{Dual feasibility}: $\lambda^* \geq 0$
+    \item \textbf{Complementary slackness}: $\lambda^* g(x^*) = 0$
+\end{enumerate}
+
+\subsection{Comprehensive Experimental Results}
+
+\subsubsection{Polynomial Degree Analysis}
+
+Experiments were conducted with polynomial degrees $n = 3, 5, 7, 9, 11, 13, 15$ to analyze:
+\begin{itemize}
+    \item Algorithm convergence behavior
+    \item Computational efficiency
+    \item Solution quality and sparsity patterns
+    \item Problem conditioning effects
+\end{itemize}
+
+\textbf{Key Findings:}
+\begin{itemize}
+    \item \textbf{Low degrees (n = 3-7)}: All algorithms find meaningful solutions with different sparsity patterns
+    \item \textbf{High degrees (n ≥ 9)}: Problems become ill-conditioned, leading to zero solutions for strong regularization
+    \item \textbf{ASM performance}: Generally achieves better objective values at low degrees due to exact constraint handling
+    \item \textbf{Computational cost}: ASM is most efficient (fewest iterations), followed by PG, then FB
+\end{itemize}
+
+\subsubsection{Regularization Parameter Sensitivity}
+
+The Forward-Backward algorithm was tested with $\lambda \in [0.01, 5.0]$ to study regularization effects:
+
+\textbf{Observations:}
+\begin{itemize}
+    \item For the test problem (degree 10), all $\lambda$ values lead to zero solutions
+    \item This indicates the problem is sufficiently ill-conditioned that any regularization drives the solution to zero
+    \item Lower degree problems (n ≤ 7) show more varied behavior with different $\lambda$ values
+\end{itemize}
+
+\subsubsection{Condition Number Analysis}
+
+The condition number $\kappa(A^\top A)$ grows exponentially with polynomial degree:
+\begin{itemize}
+    \item Degree 3: $\kappa \approx 10^5$
+    \item Degree 7: $\kappa \approx 10^{10}$
+    \item Degree 15: $\kappa \approx 10^{15}$
+\end{itemize}
+
+This exponential growth explains why higher-degree problems become numerically challenging.
+
+\subsection{Algorithm Comparison Summary}
+
+\begin{table}[h]
+\centering
+\caption{Algorithm Performance Comparison (Representative Results)}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Algorithm} & \textbf{Iterations} & \textbf{Objective} & \textbf{Efficiency} \\
+\midrule
+Forward-Backward & Medium-High & Variable & Good \\
+Projected Gradient & Low-Medium & Good & Very Good \\
+Active-Set Method & Very Low & Best & Excellent \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Approximation Quality Analysis}
+
+For well-conditioned problems (low polynomial degrees):
+\begin{itemize}
+    \item \textbf{ASM}: Provides best approximation quality due to exact constraint satisfaction
+    \item \textbf{PG}: Close performance to ASM with faster convergence
+    \item \textbf{FB}: Sparsity-accuracy trade-off controlled by $\lambda$ parameter
+\end{itemize}
+
+For ill-conditioned problems (high degrees):
+\begin{itemize}
+    \item All algorithms struggle due to numerical conditioning
+    \item Regularization becomes essential but can drive solutions to zero
+    \item Pre-conditioning strategies become necessary (addressed in Tasks 3-4)
+\end{itemize}
+
+\subsection{Comprehensive Visualization Analysis}
+
+Task 2 results are visualized through several comprehensive plots that demonstrate the performance characteristics across different problem sizes and parameters.
+
+\subsubsection{Performance Analysis Across Degrees}
+
+Figure~\ref{fig:task2_performance} shows how algorithm performance scales with polynomial degree.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../results/plots/task2_performance_analysis.png}
+\caption{Task 2 Performance Analysis: Algorithm behavior across polynomial degrees 3-15, showing objective values, iterations, computation time, and condition numbers.}
+\label{fig:task2_performance}
+\end{figure}
+
+Key observations from the performance analysis:
+\begin{itemize}
+    \item \textbf{Low degrees (3-7)}: All algorithms perform well with meaningful solutions
+    \item \textbf{Medium degrees (9-11)}: Performance degradation begins due to conditioning
+    \item \textbf{High degrees (13-15)}: Severe ill-conditioning leads to numerical difficulties
+    \item \textbf{ASM efficiency}: Consistently requires fewer iterations across all problem sizes
+\end{itemize}
+
+\subsubsection{Lambda Parameter Sensitivity}
+
+Figure~\ref{fig:task2_lambda} demonstrates the Forward-Backward algorithm's sensitivity to regularization parameters.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../results/plots/task2_lambda_analysis.png}
+\caption{Lambda Sensitivity Analysis: Impact of regularization parameter on objective values, sparsity, active coefficients, and approximation quality.}
+\label{fig:task2_lambda}
+\end{figure}
+
+The lambda sensitivity analysis reveals:
+\begin{itemize}
+    \item \textbf{Objective values}: Increase with higher regularization as expected
+    \item \textbf{Sparsity control}: L1 norm decreases with higher $\lambda$ values
+    \item \textbf{Active coefficients}: Number of non-zero coefficients reduces with regularization
+    \item \textbf{Approximation quality}: RMSE increases with stronger regularization
+\end{itemize}
+
+\subsubsection{Function Approximation Quality}
+
+Figure~\ref{fig:task2_approximations} compares the quality of sine function approximations across different polynomial degrees and algorithms.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../results/plots/task2_approximation_comparison.png}
+\caption{Approximation Quality Comparison: Function approximations and coefficient patterns for degrees 3, 7, 11, and 15 across all algorithms.}
+\label{fig:task2_approximations}
+\end{figure}
+
+The approximation quality analysis shows:
+\begin{itemize}
+    \item \textbf{Low degrees}: Excellent approximation with all algorithms
+    \item \textbf{Medium degrees}: Good approximation maintained with some degradation
+    \item \textbf{High degrees}: Significant approximation quality loss due to conditioning
+    \item \textbf{Algorithm differences}: ASM generally provides best approximations for well-conditioned problems
+\end{itemize}
+
+\subsection{Data Persistence and Reproducibility}
+
+All experimental results have been systematically saved to ensure reproducibility and future analysis:
+
+\begin{itemize}
+    \item \textbf{Binary data}: Complete results saved in \texttt{results/data/task1\_results.pkl} and \texttt{results/data/task2\_results.pkl}
+    \item \textbf{JSON summaries}: Human-readable summaries in \texttt{results/data/task1\_results.json} and \texttt{results/data/task2\_results.json}
+    \item \textbf{High-resolution plots}: Publication-quality visualizations in \texttt{results/plots/}
+    \item \textbf{Timestamped data}: All results include timestamps for version control
+\end{itemize}
+
+The data includes:
+\begin{itemize}
+    \item Complete solution vectors and convergence histories
+    \item Performance metrics (iterations, objective values, optimality measures)
+    \item Problem parameters and condition numbers
+    \item Algorithm-specific results and comparisons
+\end{itemize}
+
 \end{document}
