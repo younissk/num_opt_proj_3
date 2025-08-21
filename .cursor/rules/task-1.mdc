@@ -1,0 +1,14 @@
+---
+description: Whenever Task1 is relevant (Implement the FB for the the penalized Lasso and the PG for the constrained Lasso.)
+alwaysApply: false
+---
+# Task 1: Implement the FB for the the penalized Lasso and the PG for the constrained Lasso
+
+Implement the FB for the the penalized Lasso and the PG for the constrained Lasso.
+
+For both problems/methods: write down the optimality conditions write down the algorithm detail the formulas for the prox/projection step (you can find hints for the prox step in the lecture; how to project onto the set ∥x∥1 ≤ 1 you need to figure out)
+
+With this foundation, you can program both methods: step size: use the fixed step size 1/L for L = the largest eigenvalue of A⊤A stopping criterion: use a bound on number of iterations (e.g. 105) together with a suitable optimality measure
+
+See the definitions of proximal residual and projected gradient below — explain how are they
+related to optimality conditions on one hand and to the iteration of the FB/PG on the other; then use them to formulate a suitable stopping criterion.

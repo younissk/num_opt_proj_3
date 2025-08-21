@@ -1,0 +1,84 @@
+---
+alwaysApply: true
+---
+
+# Project Overview
+
+The main goal is to implement and test 2 nonsmooth optimization algorithms:
+
+- Forward-Backward (Proximal Gradient) method (FB).
+- Projected Gradient method (PG) — a specialization of FB.
+
+For comparion with PG, you will also need the Active-Set Method (ASM).
+
+You will apply these methods to again approximate the function sin(t) over [−2π, 2π] using a
+polynomial of degree n. At the same time, however, you will encourage sparsity in the coefficient vector using Lasso-type formulations, which in turn leads to nonsmooth or constrained optimization problem.
+
+Use UV as the package manager and to run the projects, as well as a well documented, well maintained Makefile.
+
+## Problem formulations
+
+The approximation is done with the polynomial:
+
+$$
+\phi(x;t) = \sum_{i=0}^{n} x_i t^i, \quad x \in \mathbb{R}^{n+1}
+$$
+
+using m = 100 uniformly spaced sample points aj ∈ [−2π, 2π] and bj = sin(aj ). Thus, the first (smooth) part of the objective function is:
+
+$$
+f(x) = \frac{1}{2} \sum_{j=1}^{m} \big(\phi(x;a_j) - b_j\big)^2
+$$
+
+which is a quadratic function in x. Let A ∈ Rm×(n+1) be the matrix whose j-th row is (1, a^j , a^2_j , . . . , a^n_j ).
+
+$$
+A =
+\begin{bmatrix}
+1 & a_1 & a_1^2 & \cdots & a_1^n \\
+1 & a_2 & a_2^2 & \cdots & a_2^n \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+1 & a_m & a_m^2 & \cdots & a_m^n
+\end{bmatrix}
+$$
+
+(the so called Vandermonde matrix) and b ∈ Rm be the vector with entries bj = sin(aj ). Then
+the function f can be equivalently written in matrix-vector form as:
+
+$$
+f(x) = \tfrac{1}{2} \|Ax - b\|_2^2
+$$
+
+The gradient is given by ∇f (x) = A⊤(Ax − b) and the Hessian by ∇2f (x) = A⊤A.
+Note that ∇f is Lipschitz continuous with constant:
+
+$$
+L = \|A^\top A\|_2 = \sigma_{\max}(A)^2
+$$
+
+where σmax(A) denotes the largest singular value of A = the largest eigenvalue of A⊤A.
+With this notation, the problems we consider are:
+
+(A) Penalized Lasso: where λ > 0 is a parameter
+
+$$
+\min_{x \in \mathbb{R}^{n+1}} \; \tfrac{1}{2}\|Ax - b\|_2^2 + \lambda \|x\|_1
+$$
+
+(B) Constrained Lasso:
+
+$$
+\min_{x \in \mathbb{R}^{n+1}} \; \tfrac{1}{2}\|Ax - b\|_2^2
+\quad \text{subject to} \quad \|x\|_1 \leq 1
+$$
+
+## Tasks
+
+- Task 1: (4 pts) Implement the FB for the the penalized Lasso and the PG for the constrained Lasso.
+- Task 2: (4 pts) Apply the FB to the penalized Lasso and the PG as well as the AMS to the constrained Lasso.
+- Task 3: (4 pts) Condition number of matrix A and pre-conditioning.
+- Task 4: (8 pts) Run the algorithms (PGD, FB, ASM) on the pre-conditioned problems.
+
+## Submission
+
+Write everything you did in a Latex report, in a specific folder. Add all the relevant Plots and images in a /image subfolder where the report lies. If you delete something, or change something, change / delete that also in the report. It should be submitable and a source of truth.

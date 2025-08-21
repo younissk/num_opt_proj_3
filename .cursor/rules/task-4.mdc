@@ -1,0 +1,7 @@
+---
+description: Whenever Task2 is relevant (Run the algorithms (PGD, FB, ASM) on the pre-conditioned problems)
+alwaysApply: false
+---
+# Task 4: Run the algorithms (PGD, FB, ASM) on the pre-conditioned problems
+
+adjust all the algorithms so that they are applicable to the pre-conditioned problems (weightedl1 norm) do plenty of testing — similar considerations as in Task 2 apply here.

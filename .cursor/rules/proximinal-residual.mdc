@@ -1,0 +1,24 @@
+---
+description: Whenever the Proximal residual or Projected gradient is relevant
+alwaysApply: false
+---
+
+For problems of the form
+
+$$
+\min_{x \in \mathbb{R}^n} \; f(x) + g(x)
+$$
+
+where f is smooth and g is convex (possibly non-smooth), the proximal residual at xk is defined as
+
+$$
+r^k := \tfrac{1}{\alpha} \Big( x^k - \operatorname{prox}_{\alpha g}\!\big(x^k - \alpha \nabla f(x^k)\big) \Big)
+$$
+
+In the special case when g = δC for a convex set C, the proximal residual is call the projected gradient and it reads
+
+$$
+g^k := \tfrac{1}{\alpha} \Big( x^k - \Pi_{C}\!\big(x^k - \alpha \nabla f(x^k)\big) \Big)
+$$
+
+where ΠC denotes the projection onto the set C.

@@ -1,0 +1,12 @@
+---
+description: Whenever Task2 is relevant (Condition number of matrix A and pre-conditioning)
+alwaysApply: false
+---
+# Task 3: Condition number of matrix A and pre-conditioning
+
+Vandermonde matrices are known to be ill-conditioned, especially for large degrees n or when
+the evaluation points aj are close together, which can cause numerical instability in polynomial
+approximation problems. compute the condition number of A for various n pre-conditioning: divide each column of A by its norm and compute the condition number again find a diagonal matrix D such that the above operation (column normalization) corresponds to multiplying A with D−1 how to use the normalized version of A?
+
+Define new variables  ̃x = Dx (i.e. x = D−1  ̃x) and rewrite both Lasso problems in terms of  ̃x.
+Be carefull about how the constraints/nonsmooth part changes!

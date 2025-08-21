@@ -1,0 +1,13 @@
+---
+description: Whenever Task2 is relevant (Apply the FB to the penalized Lasso and the PG as well as the AMS to the constrained Lasso)
+alwaysApply: false
+---
+# Task 2: Apply the FB to the penalized Lasso and the PG as well as the AMS to the constrained Lasso
+
+Apply the FB to the penalized Lasso and the PG as well as the AMS to the constrained Lasso.
+
+For AMS, reformulate the constraints like in P2.
+
+Try different sizes of n (up to 15), starting points, and parameters λ.
+
+Report the number of iterates needed and the optimality measure. Plot the graphs of resulting approximations as well as of the function sin(t) over [−2π, 2π]. Based on the optimality measure and the plots, comment on how good is the approximation.

@@ -1,0 +1,61 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=3cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}          % better tables
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{pgfplots}         % for TikZ/PGF plots if desired
+\pgfplotsset{compat=1.18}
+
+\title{NumOps Project 3: Lasso Optimization Algorithms}
+\author{Youniss Kandah\\JKU Linz}
+\date{August 2025}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report documents the implementation and analysis of three optimization algorithms for Lasso-type problems: Forward-Backward (FB), Projected Gradient (PG), and Active-Set Method (ASM). The project focuses on approximating the sine function over $[-2\pi, 2\pi]$ using polynomial regression while encouraging sparsity in the coefficient vector. We implement these algorithms and compare their performance on both penalized and constrained Lasso formulations, including analysis of condition numbers and pre-conditioning strategies.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\subsection{Development Environment}
+
+The project is implemented in Python 3.13 using modern development tools:
+
+\begin{itemize}
+    \item \textbf{Package Manager}: UV for fast dependency resolution
+    \item \textbf{Virtual Environment}: Isolated Python environment for reproducibility
+    \item \textbf{Core Dependencies}: NumPy, Matplotlib, SciPy, Pandas
+    \item \textbf{Development Tools}: pytest, black, flake8
+\end{itemize}
+
+\subsection{Project Structure}
+
+The codebase is organized into modular components:
+
+\begin{verbatim}
+num_opt_proj_3/
+├── src/
+│   ├── algorithms/     # Optimization algorithms (FB, PG, ASM)
+│   ├── problems/       # Problem formulations
+│   ├── utils/          # Utility functions
+│   └── experiments/    # Experiment scripts
+├── results/
+│   ├── plots/          # Generated plots
+│   └── data/           # Numerical results
+├── docs/               # Documentation and reports
+├── Makefile            # Build and run commands
+└── pyproject.toml      # Project configuration
+\end{verbatim}
+
+\section{Core Implementation}
+
+\end{document}
